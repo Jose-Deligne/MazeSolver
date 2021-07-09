@@ -1,0 +1,8 @@
+.background {
+
+}
+
+.grid-style {
+    display: grid;
+    grid-template-columns: 8ch auto;
+}
