@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import classes from './Maze.module.css';
 import GridBox from './GridBox';
 
@@ -8,6 +8,7 @@ const Maze = (props) => {
     let heightPerBox = 100/rows;
     let widthPerBox = 100/columns;
 
+    const [buttonPressed, setButtonPressed] = useState(false);
     
     let squareStyle = {
         display: 'grid',
@@ -17,16 +18,15 @@ const Maze = (props) => {
         background: 'grey'
     };
 
-    let boxStyle = {
-        color: 'black',
-        background: 'white',
-        border: '1px solid black',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
 
-    console.log(`Height: ${heightPerBox}\nWidth ${widthPerBox}`)
+
+    const handleMouseDown = (value) => {
+        setButtonPressed(true)
+    };
+
+    const handleMouseUp = (event, value) => {
+        setButtonPressed(false);
+    };
 
     const createBoxGrid = () => {
         // Create 2d array for each box
@@ -39,7 +39,12 @@ const Maze = (props) => {
         //creates jsx to display boxes
         let displayGrid = mazeMap.map((position) => {
             return(
-                <GridBox row={position[0]} col={position[1]} />
+                <GridBox 
+                 cord={position}
+                 bPressed={handleMouseDown} 
+                 bReleased={handleMouseUp}
+                 wallBlock={buttonPressed} 
+                />
             );
         });
         console.log('Complete')

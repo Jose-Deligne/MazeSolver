@@ -1,10 +1,14 @@
-import React from 'react';
+import React,{useState} from 'react';
 import classes from './GridBox.module.css';
 
 const GridBox = (props) => {
-    let row = props.row;
-    let column = props.col;
+    const [backgroundColor, setBackgroundColor] = useState({
+        background: 'white'
+    });
+    const [isWall, setIsWall] = useState(false);
 
+    let row = props.cord[0];
+    let column = props.cord[1];
     /*
     let boxStyle = {
         color: 'black',
@@ -18,11 +22,38 @@ const GridBox = (props) => {
     */
 
     const getPosition = () => {
-        console.log(`row: ${row}. Column ${column}`)
+        console.log(`row: ${row}. Column ${column}. Wall: ${isWall}`)
     }
 
+    const hoverOverCellHandler = (event) => {
+        if (props.wallBlock) {
+            setIsWall(true)
+            setBackgroundColor({
+                background: 'blue'
+            })
+        }
+    };
+
+    const clickedDownHandler = (event) => {
+        console.log('mouse down')
+        setIsWall(true)
+        setBackgroundColor({
+            background: 'blue'
+        })
+        props.bPressed(props.cord)
+    };
+
     return(
-        <div className={classes.boxStyle} onClick={getPosition}>
+        <div 
+         className={classes.boxStyle}
+         style={backgroundColor} 
+         onClick={getPosition} 
+         onMouseDown={clickedDownHandler}
+         onMouseUp={(event) => {
+             props.bReleased(event, props.cord)
+         }}
+         onMouseEnter={hoverOverCellHandler}
+         >
             {`(${row},${column})`}
         </div>
     );
