@@ -1,11 +1,19 @@
 import React,{useState} from 'react';
+import {GetWallCreationStatus, GetDeleteWallsStatus} from '../../Context/MenuSelectionContext';
 import classes from './GridBox.module.css';
 
 const GridBox = (props) => {
     const [backgroundColor, setBackgroundColor] = useState({
         background: 'white'
     });
+
+    const wallCreationStatus = GetWallCreationStatus();
+    const wallDeletionStatus = GetDeleteWallsStatus();
+
+
     const [isWall, setIsWall] = useState(false);
+
+
 
     let row = props.cord[0];
     let column = props.cord[1];
@@ -26,22 +34,49 @@ const GridBox = (props) => {
     }
 
     const hoverOverCellHandler = (event) => {
+        console.log(props.wallBlock)
         if (props.wallBlock) {
-            setIsWall(true)
-            setBackgroundColor({
-                background: 'blue'
-            })
+
+            if (wallCreationStatus) {
+                setIsWall(true)
+                setBackgroundColor({
+                    background: 'blue'
+                });
+            }
+
+            if (wallDeletionStatus) {
+                setIsWall(false)
+                setBackgroundColor({
+                    background: 'white'
+                })
+            }
+
         }
     };
 
     const clickedDownHandler = (event) => {
-        console.log('mouse down')
-        setIsWall(true)
-        setBackgroundColor({
-            background: 'blue'
-        })
-        props.bPressed(props.cord)
+        if (wallCreationStatus){
+            setIsWall(true)
+            setBackgroundColor({
+                background: 'blue'
+            })
+            props.bPressed(props.cord)
+        }
+
+        if (wallDeletionStatus){
+            setIsWall(false)
+            setBackgroundColor({
+                background: 'white'
+            })
+            props.bPressed(props.cord)
+        }
     };
+
+    const clickedUpHandler = (event) => {
+        if (wallCreationStatus || wallDeletionStatus){
+            props.bReleased(event, props.cord)
+        }
+    }
 
     return(
         <div 
@@ -49,9 +84,7 @@ const GridBox = (props) => {
          style={backgroundColor} 
          onClick={getPosition} 
          onMouseDown={clickedDownHandler}
-         onMouseUp={(event) => {
-             props.bReleased(event, props.cord)
-         }}
+         onMouseUp={clickedUpHandler}
          onMouseEnter={hoverOverCellHandler}
          >
             {`(${row},${column})`}

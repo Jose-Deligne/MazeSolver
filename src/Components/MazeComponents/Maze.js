@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
-import classes from './Maze.module.css';
+import {GetWallCreationStatus, GetDeleteWallsStatus} from '../../Context/MenuSelectionContext';
 import GridBox from './GridBox';
+import classes from './Maze.module.css';
 
 const Maze = (props) => {
     let rows = props.dim[0];
@@ -8,7 +9,9 @@ const Maze = (props) => {
     let heightPerBox = 100/rows;
     let widthPerBox = 100/columns;
 
-    const [buttonPressed, setButtonPressed] = useState(false);
+    const [createWallPressed, setCreateWallPressed] = useState(false);
+    const wallCreationStatus = GetWallCreationStatus();
+    const wallDeletionStatus = GetDeleteWallsStatus();
     
     let squareStyle = {
         display: 'grid',
@@ -19,13 +22,16 @@ const Maze = (props) => {
     };
 
 
-
     const handleMouseDown = (value) => {
-        setButtonPressed(true)
+        if (wallCreationStatus || wallDeletionStatus){
+            setCreateWallPressed(true)
+        }
     };
 
     const handleMouseUp = (event, value) => {
-        setButtonPressed(false);
+        if (wallCreationStatus || wallDeletionStatus){
+            setCreateWallPressed(false);
+        }
     };
 
     const createBoxGrid = () => {
@@ -43,7 +49,7 @@ const Maze = (props) => {
                  cord={position}
                  bPressed={handleMouseDown} 
                  bReleased={handleMouseUp}
-                 wallBlock={buttonPressed} 
+                 wallBlock={createWallPressed}
                 />
             );
         });

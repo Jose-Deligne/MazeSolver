@@ -5,11 +5,16 @@
     display: flex;
     justify-content: center;
     border-bottom: 1px solid black;
-    height: 10%;
+    height: 8vh;
+}
+
+.menu {
+    background: lightgray;
+    height: 5vh;
 }
 
 .body {
-    height: 80vh;
+    height: 75vh;
     background-color: darkblue;
     color: orange;
 
