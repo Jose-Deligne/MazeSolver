@@ -2,10 +2,13 @@ import React,{useState, useContext} from 'react';
 
 const CreateWallsActiveContext = React.createContext();
 const DeleteWallsActiveContext = React.createContext();
-const FillWallsActiveContext = React.createContext();
+const StartingPointActiveContext = React.createContext();
+const GoalPointActiveContext = React.createContext();
+
 const SetWallsCreationContext = React.createContext();
 const SetDeleteWallsContext = React.createContext();
-const SetFillWallsContext = React.createContext();
+const SetStartingPointContext = React.createContext();
+const SetGoalPointContext = React.createContext();
 
 export const GetWallCreationStatus = () => {
     return useContext(CreateWallsActiveContext);
@@ -23,18 +26,27 @@ export const SetDeleteWallStatus = () => {
     return useContext(SetDeleteWallsContext);
 };
 
-export const GetFillWallStatus = () => {
-    return useContext(FillWallsActiveContext);
+export const GetStartingPointActiveStatus = () => {
+    return useContext(StartingPointActiveContext);
+};
+
+export const SetStartingPointActiveStatus = () => {
+    return useContext(SetStartingPointContext);
+};
+
+export const GetGoalPointActiveStatus = () => {
+    return useContext(GoalPointActiveContext);
 }
 
-export const SetFillWallStatus = () => {
-    return useContext(SetFillWallsContext);
+export const SetGoalPointActiveStatus = () => {
+    return useContext(SetGoalPointContext);
 }
 
 const MenuSelectionProvider = ({children}) => {
     const [wallCreationActive, setWallCreationActive] = useState(false);
     const [deleteWallCreationActive, setDeleteWallCreationActive] = useState(false);
-    const [fillWalls, setFillWalls] = useState(false);
+    const [startingButtonActive, setStartingButtonActive] = useState(false);
+    const [goalButtonActive, setGoalButtonActive] = useState(false);
 
     const toggleCreateWallStatus = () => {
         setWallCreationActive(!wallCreationActive);
@@ -44,8 +56,12 @@ const MenuSelectionProvider = ({children}) => {
         setDeleteWallCreationActive(!deleteWallCreationActive);
     }
 
-    const setFillWallStatus = () => {
-        setFillWalls(!fillWalls);
+    const toggleStartingButtonStatus = () => {
+        setStartingButtonActive(!startingButtonActive);
+    }
+
+    const toggleGoalButtonStatus = () => {
+        setGoalButtonActive(!goalButtonActive);
     }
 
     return(
@@ -53,11 +69,15 @@ const MenuSelectionProvider = ({children}) => {
             <DeleteWallsActiveContext.Provider value={deleteWallCreationActive}>
                 <SetWallsCreationContext.Provider value={toggleCreateWallStatus}>
                     <SetDeleteWallsContext.Provider value={toggleDeleteWallStatus}>
-                        <FillWallsActiveContext.Provider value={fillWalls}>
-                            <SetFillWallsContext.Provider value={setFillWallStatus}>
-                                {children}
-                            </SetFillWallsContext.Provider>
-                        </FillWallsActiveContext.Provider>
+                        <StartingPointActiveContext.Provider value={startingButtonActive}>
+                            <SetStartingPointContext.Provider value={toggleStartingButtonStatus}>
+                                <GoalPointActiveContext.Provider value={goalButtonActive}>
+                                    <SetGoalPointContext.Provider value={toggleGoalButtonStatus}>
+                                        {children}                                
+                                    </SetGoalPointContext.Provider>
+                                </GoalPointActiveContext.Provider>
+                            </SetStartingPointContext.Provider>
+                        </StartingPointActiveContext.Provider>
                     </SetDeleteWallsContext.Provider>
                 </SetWallsCreationContext.Provider>
             </DeleteWallsActiveContext.Provider>

@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import {GetWallCreationStatus, GetDeleteWallsStatus} from '../../Context/MenuSelectionContext';
+import React,{useState, useEffect} from 'react';
+import {GetWallCreationStatus, GetDeleteWallsStatus, GetStartingPointActiveStatus} from '../../Context/MenuSelectionContext';
 import GridBox from './GridBox';
 import classes from './Maze.module.css';
 
@@ -10,9 +10,11 @@ const Maze = (props) => {
     let widthPerBox = 100/columns;
 
     const [createWallPressed, setCreateWallPressed] = useState(false);
+    const [startingPoint, setStartingPoint] = useState();
     const wallCreationStatus = GetWallCreationStatus();
     const wallDeletionStatus = GetDeleteWallsStatus();
-    
+    const startingButtonStatus = GetStartingPointActiveStatus(null);
+
     let squareStyle = {
         display: 'grid',
         height: '100%',
@@ -34,6 +36,11 @@ const Maze = (props) => {
         }
     };
 
+    const changeStartingPoint = (position) => {
+        setStartingPoint(position);
+    };
+
+
     const createBoxGrid = () => {
         // Create 2d array for each box
         const mazeMap = [];
@@ -43,6 +50,7 @@ const Maze = (props) => {
             }
         }
         //creates jsx to display boxes
+        /*
         let displayGrid = mazeMap.map((position) => {
             return(
                 <GridBox 
@@ -53,18 +61,38 @@ const Maze = (props) => {
                 />
             );
         });
-        console.log('Complete')
+        */
+       let displayGrid = mazeMap.map((position) => {
+            return(
+                [
+                    position,
+                    <GridBox 
+                    cord={position}
+                    bPressed={handleMouseDown} 
+                    bReleased={handleMouseUp}
+                    wallBlock={createWallPressed}
+                    checkStarting={startingPoint}
+                    setStarting={changeStartingPoint}
+                    />
+                ]
+            );
+        });
+
         return displayGrid;
     }
 
 
-
     let mazeMap = createBoxGrid();
+
+    let displayGrid = mazeMap.map((position) => {
+        return(position[1]);
+    });
+
 
     return(
         <div className={props.className}>
             <div style={squareStyle}>
-                {mazeMap}
+                {displayGrid}
             </div>
         </div>
     );
